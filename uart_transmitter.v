@@ -1,14 +1,18 @@
+//parameter clks_per_bit will help us to tune the baud rate according to the clock signal.
+//For example suppose that our clock signal is of 5MHz and baud rate is suppose 9600 then clks per bit will be 5*10^6/9600.
+
+
 module uart_tx 
   #(parameter CLKS_PER_BIT)
   (
-   input       i_Clock,
-   input       i_Tx_DV,
-   input [7:0] i_Tx_Byte, 
-   output      o_Tx_Active,
-   output reg  o_Tx_Serial,
-   output      o_Tx_Done
+   input       i_Clock,//input clock
+   input       i_Tx_DV,//input transaction data valid
+    input [7:0] i_Tx_Byte,// 8 bit input data
+   output      o_Tx_Active,//once the transmitter starts transmitting we will make output transaction as active.
+    output reg  o_Tx_Serial,// the serail output data sender
+   output      o_Tx_Done// transaction successfully done
    );
-  
+  //5 states fsm
   parameter s_IDLE         = 3'b000;
   parameter s_TX_START_BIT = 3'b001;
   parameter s_TX_DATA_BITS = 3'b010;
