@@ -32,15 +32,15 @@ module uart_tx
       case (r_SM_Main)
         s_IDLE :
           begin
-            o_Tx_Serial   <= 1'b1;         // Drive Line High for Idle
+            o_Tx_Serial   <= 1'b1;         // when there is no data transmission by default input line will be high
             r_Tx_Done     <= 1'b0;
             r_Clock_Count <= 0;
             r_Bit_Index   <= 0;
              
-            if (i_Tx_DV == 1'b1)
+            if (i_Tx_DV == 1'b1) // input data is valid
               begin
-                r_Tx_Active <= 1'b1;
-                r_Tx_Data   <= i_Tx_Byte;
+                r_Tx_Active <= 1'b1;//set the status of transmitter as transmitting
+                r_Tx_Data   <= i_Tx_Byte;// store the 8 bit input data in the register
                 r_SM_Main   <= s_TX_START_BIT;
               end
             else
@@ -51,7 +51,7 @@ module uart_tx
         // Send out Start Bit. Start bit = 0
         s_TX_START_BIT :
           begin
-            o_Tx_Serial <= 1'b0;
+            o_Tx_Serial <= 1'b0; // put up the serial line as zero indicating that the reci
              
             // Wait CLKS_PER_BIT-1 clock cycles for start bit to finish
             if (r_Clock_Count < CLKS_PER_BIT-1)
